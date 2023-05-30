@@ -110,8 +110,9 @@ def register(request):
         if form.is_valid(): 
             user = form.save() 
             contact_number = form.cleaned_data['contact_number'] 
-            member = Member.objects.create(user=user, contact_number=contact_number) 
+            member = Member.objects.create(user=user, contact_number=contact_number)
             login(request, user) 
+            Order.objects.create(member=request.user, status=False, total_price=0, date=timezone.now())
             messages.success(request, f"Welcome to our bakery, {user.username}!") 
             return redirect('index') 
     else: 
