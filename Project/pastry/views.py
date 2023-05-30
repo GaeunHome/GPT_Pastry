@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from .models import Pastry, Order, OrderItem, Member 
 from .forms import OrderForm, MemberForm, MemberProfileForm, UserForm
 from django.utils import timezone
-# GPT3.5新增
+
 from django.contrib.auth import get_user_model
 
 def index(request): 
