@@ -29,7 +29,7 @@ class OrderItem(models.Model):
     quantity = models.IntegerField() 
     price = models.IntegerField() 
     def __str__(self): 
-        return f"{self.quantity}x {self.pastry.name} for Order {self.order.id}" 
+        return f"{self.quantity}x {self.pastry.name} for Order {self.order.id}"
     
 class Member(models.Model): 
     user = models.OneToOneField(User, on_delete=models.CASCADE) 

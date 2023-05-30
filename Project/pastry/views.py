@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth.models import User 
 from .models import Pastry, Order, OrderItem, Member 
-from .forms import OrderForm, MemberForm, MemberProfileForm
+from .forms import OrderForm, MemberForm, MemberProfileForm, UserForm
 from django.utils import timezone
 # GPT3.5新增
 from django.contrib.auth import get_user_model
@@ -25,7 +25,10 @@ def cart(request):
     except Member.DoesNotExist:
         return redirect('login')
     order_items = OrderItem.objects.filter(order__member=user, order__status=False)
-    return render(request, 'cart.html', {'order_items': order_items})
+    order_items_total = 0
+    for order_item in order_items:
+        order_items_total += order_item.price * order_item.quantity
+    return render(request, 'cart.html', {'order_items': order_items, 'order_items_total': order_items_total})
 '''
 # 二次版本
 @login_required
@@ -82,13 +85,17 @@ def checkout(request):
     if request.method == 'POST':
         Order.objects.filter(member=request.user, status=False).update(status=True)
         Messages = True
-        return render(request, 'index.html', {'messages': Messages})
+        pastries = Pastry.objects.all() 
+        return render(request, 'index.html', {'messages': Messages, 'pastries': pastries})
     else:
         user = request.user
         contact_number = Member.objects.get(user=user).contact_number
         order_items = OrderItem.objects.filter(order__member=request.user, order__status=False)
-    return render(request, 'checkout.html', {'order_items': order_items, 'contact_number': contact_number, 'user': user})
-
+        order_items_total = 0
+        for order_item in order_items:
+            order_items_total += order_item.price * order_item.quantity
+        return render(request, 'checkout.html', {'order_items': order_items, 'order_items_total': order_items_total, 'contact_number': contact_number, 'user': user})
+    
 def login_view(request): 
     if request.method == 'POST': 
         form = AuthenticationForm(data=request.POST) 
