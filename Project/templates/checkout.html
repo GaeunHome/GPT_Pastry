@@ -42,7 +42,8 @@
       {% endfor %} 
       <tr> 
         <td colspan="2"><strong>Total Price:</strong></td> 
-        <td><strong>{{ order_items|total_price }}</strong></td> 
+        <td><strong>{{ order_item.price }}</strong></td> 
       </tr> 
     </tbody> 
   </table> 
+  {% endblock %}
