@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth.models import User 
 from .models import Pastry, Order, OrderItem, Member 
-from .forms import PastryForm, OrderForm, CheckoutForm, MemberForm, MemberProfileForm
+from .forms import OrderForm, MemberForm, MemberProfileForm
 from django.utils import timezone
 # GPT3.5新增
 from django.contrib.auth import get_user_model
@@ -74,51 +74,20 @@ def remove_from_cart(request, order_item_id):
     order.save() 
     messages.success(request, f"{order_item.pastry.name} removed from cart!") 
     return redirect('cart') 
-'''
-@login_required 
-def checkout(request): 
-    if request.method == 'POST': 
-        form = CheckoutForm(request.POST) 
-        if form.is_valid(): 
-            name = form.cleaned_data['name'] 
-            contact_number = form.cleaned_data['contact_number'] 
-            email = form.cleaned_data['email'] 
-            password = form.cleaned_data['password'] 
-            user = User.objects.create_user(username=email, email=email, password=password) 
-            member = Member.objects.create(user=user, contact_number=contact_number) 
-            order = Order.objects.get(member=request.user, status=False) 
-            order.member = user 
-            order.status = True 
-            order.save() 
-            messages.success(request, "Order placed successfully!") 
-            return redirect('index') 
-    else: 
-        form = CheckoutForm() 
-    return render(request, 'checkout.html', {'form': form}) 
-'''
-# 根據GPT3.5修改
+
 @login_required
 def checkout(request):
     if not hasattr(request.user, 'member'):
         return redirect('register')
     if request.method == 'POST':
-        form = CheckoutForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            contact_number = form.cleaned_data['contact_number']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = User.objects.create_user(username=email, email=email, password=password)
-            member = Member.objects.create(user=user, contact_number=contact_number)
-            order = Order.objects.get(member=request.user.member, status=False)
-            order.member = user
-            order.status = True
-            order.save()
-            messages.success(request, "Order placed successfully!")
-            return redirect('index')
+        
+        messages.success(request, "Order placed successfully!")
+        return redirect('index')
     else:
-        form = CheckoutForm()
-    return render(request, 'checkout.html', {'form': form})
+        user = request.user
+        contact_number = Member.objects.get(user=user).contact_number
+        order_items = OrderItem.objects.filter(order__member=request.user, order__status=False)
+    return render(request, 'checkout.html', {'order_items': order_items, 'contact_number': contact_number, 'user': user})
 
 def login_view(request): 
     if request.method == 'POST': 

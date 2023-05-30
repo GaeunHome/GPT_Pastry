@@ -13,11 +13,11 @@ class OrderForm(forms.Form):
     pastry_id = forms.IntegerField() 
     quantity = forms.IntegerField() 
 
-class CheckoutForm(forms.Form): 
-    name = forms.CharField(max_length=255) 
-    contact_number = forms.CharField(max_length=20) 
-    email = forms.EmailField() 
-    password = forms.CharField(widget=forms.PasswordInput) 
+# class CheckoutForm(forms.Form): 
+#     name = forms.CharField(max_length=255) 
+#     contact_number = forms.CharField(max_length=20) 
+#     email = forms.EmailField() 
+#     password = forms.CharField(widget=forms.PasswordInput) 
 
 class MemberForm(UserCreationForm): 
     contact_number = forms.CharField(max_length=20) 
