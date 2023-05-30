@@ -80,9 +80,9 @@ def checkout(request):
     if not hasattr(request.user, 'member'):
         return redirect('register')
     if request.method == 'POST':
-        
-        messages.success(request, "Order placed successfully!")
-        return redirect('index')
+        Order.objects.filter(member=request.user, status=False).update(status=True)
+        Messages = True
+        return render(request, 'index.html', {'messages': Messages})
     else:
         user = request.user
         contact_number = Member.objects.get(user=user).contact_number

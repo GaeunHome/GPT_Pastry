@@ -27,4 +27,9 @@
       {% endfor %} 
     </div> 
   </div> 
+  {%if messages == True %}
+  <script>
+    alert(" Order placed successfully! ");
+  </script>
+  {%endif%}
 {% endblock %} 
