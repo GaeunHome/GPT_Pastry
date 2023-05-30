@@ -25,10 +25,8 @@ def cart(request):
     except Member.DoesNotExist:
         return redirect('login')
     order_items = OrderItem.objects.filter(order__member=user, order__status=False)
-    order_items_total = 0
-    for order_item in order_items:
-        order_items_total += order_item.price * order_item.quantity
-    return render(request, 'cart.html', {'order_items': order_items, 'order_items_total': order_items_total})
+    total_price = Order.objects.get(member=user, status=False).total_price
+    return render(request, 'cart.html', {'order_items': order_items, 'total_price': total_price})
 '''
 # 二次版本
 @login_required
@@ -91,10 +89,8 @@ def checkout(request):
         user = request.user
         contact_number = Member.objects.get(user=user).contact_number
         order_items = OrderItem.objects.filter(order__member=request.user, order__status=False)
-        order_items_total = 0
-        for order_item in order_items:
-            order_items_total += order_item.price * order_item.quantity
-        return render(request, 'checkout.html', {'order_items': order_items, 'order_items_total': order_items_total, 'contact_number': contact_number, 'user': user})
+        total_price = Order.objects.get(member=request.user, status=False).total_price
+        return render(request, 'checkout.html', {'order_items': order_items, 'contact_number': contact_number, 'user': user, 'total_price': total_price})
     
 def login_view(request): 
     if request.method == 'POST': 
