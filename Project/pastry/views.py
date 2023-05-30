@@ -17,7 +17,7 @@ def index(request):
 def menu(request): 
     pastries = Pastry.objects.all() 
     return render(request, 'menu.html', {'pastries': pastries})
-# 根據GPT3.5修改
+
 @login_required
 def cart(request):
     try:
@@ -27,20 +27,7 @@ def cart(request):
     order_items = OrderItem.objects.filter(order__member=user, order__status=False)
     total_price = Order.objects.get(member=user, status=False).total_price
     return render(request, 'cart.html', {'order_items': order_items, 'total_price': total_price})
-'''
-# 二次版本
-@login_required
-def cart(request):
-    if not hasattr(request.user, 'member'):
-        return redirect('login')
-    order_items = OrderItem.objects.filter(order__member=request.user.member, order__status=False)
-    return render(request, 'cart.html', {'order_items': order_items})
-# 初版
-@login_required 
-def cart(request): 
-    order_items = OrderItem.objects.filter(order__member=request.user.member, order__status=False) 
-    return render(request, 'cart.html', {'order_items': order_items}) 
-'''
+
 @login_required 
 def add_to_cart(request): 
     if request.method == 'POST': 
@@ -49,9 +36,6 @@ def add_to_cart(request):
             pastry_id = form.cleaned_data['pastry_id'] 
             quantity = form.cleaned_data['quantity'] 
             pastry = get_object_or_404(Pastry, pk=pastry_id)
-            # 新增此段
-            # user = get_user_model().objects.get(pk=request.user.pk)
-            # 新增timezone.now() # request.user改成user.member
             user = request.user
             order, created = Order.objects.get_or_create(member=user, status=False, defaults={'total_price': 0, 'date': timezone.now()}) 
             order_item, created = OrderItem.objects.get_or_create(order=order, pastry=pastry, defaults={'quantity': 0, 'price': 0}) 

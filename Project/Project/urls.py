@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings # 手動修 問GPT3.5
-from django.conf.urls.static import static # 手動修 問GPT3.5
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('pastry/', include('pastry.urls')), # 自己加
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # 手動修 問GPT3.5
+    path('pastry/', include('pastry.urls')),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
