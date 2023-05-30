@@ -1,0 +1,39 @@
+{% extends 'base.html' %} 
+
+{% block content %} 
+  <div class="container"> 
+    <h1>Menu</h1> 
+    <form method="get"> 
+      <div class="form-group"> 
+        <input type="text" class="form-control" name="search" placeholder="Search for pastries"> 
+      </div> 
+      <button type="submit" class="btn btn-primary">Search</button> 
+    </form> 
+    <hr> 
+    <div class="row"> 
+      {% for pastry in pastries %} 
+        <div class="col-md-4"> 
+          <div class="card mb-4 shadow-sm"> 
+            <img src="{{ pastry.image.url }}" class="card-img-top" alt="{{ pastry.name }}"> 
+            <div class="card-body"> 
+              <h5 class="card-title">{{ pastry.name }}</h5> 
+              <p class="card-text">{{ pastry.description }}</p> 
+              <p class="card-text">Price: ${{ pastry.price }}</p> 
+              <form method="post" action="{% url 'add_to_cart' %}"> 
+                {% csrf_token %} 
+                <input type="hidden" name="pastry_id" value="{{ pastry.id }}"> 
+                <div class="form-group"> 
+                  <label for="quantity">Quantity:</label> 
+                  <input type="number" class="form-control" name="quantity" value="1" min="1"> 
+                </div> 
+                <button type="submit" class="btn btn-primary">Add to Cart</button> 
+              </form> 
+            </div> 
+          </div> 
+        </div> 
+      {% empty %} 
+        <p>No pastries found.</p> 
+      {% endfor %} 
+    </div> 
+  </div> 
+{% endblock %} 

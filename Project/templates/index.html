@@ -1,0 +1,30 @@
+{% extends 'base.html' %} 
+
+{% block content %} 
+  <div class="container"> 
+    <h1>Welcome to our bakery!</h1> 
+    <form class="form-inline my-2 my-lg-0" action="{% url 'menu' %}" method="get"> 
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q"> 
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> 
+    </form> 
+    <div class="row"> 
+      {% for pastry in pastries %} 
+        <div class="col-md-4"> 
+          <div class="card mb-4 box-shadow"> 
+            <img class="card-img-top" src="{{ pastry.image.url }}" alt="{{ pastry.name }}"> 
+            <div class="card-body"> 
+              <h5 class="card-title">{{ pastry.name }}</h5> 
+              <p class="card-text">{{ pastry.description }}</p> 
+              <div class="d-flex justify-content-between align-items-center"> 
+                <div class="btn-group"> 
+                  <a href="{% url 'menu' %}" class="btn btn-sm btn-outline-secondary">View</a> 
+                </div> 
+                <small class="text-muted">${{ pastry.price }}</small> 
+              </div> 
+            </div> 
+          </div> 
+        </div> 
+      {% endfor %} 
+    </div> 
+  </div> 
+{% endblock %} 

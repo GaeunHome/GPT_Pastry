@@ -1,0 +1,45 @@
+{% extends 'base.html' %} 
+
+{% block content %} 
+  <h1>Cart</h1> 
+  {% if order_items %} 
+    <table class="table"> 
+      <thead> 
+        <tr> 
+          <th>Pastry</th> 
+          <th>Price</th> 
+          <th>Quantity</th> 
+          <th>Total Price</th> 
+          <th></th> 
+        </tr> 
+      </thead> 
+
+      <tbody> 
+        {% for order_item in order_items %} 
+          <tr> 
+            <td>{{ order_item.pastry.name }}</td> 
+            <td>${{ order_item.pastry.price }}</td> 
+            <td>{{ order_item.quantity }}</td> 
+            <td>${{ order_item.price }}</td> 
+            <td> 
+              <form action="{% url 'remove_from_cart' order_item.id %}" method="POST"> 
+                {% csrf_token %} 
+                <button type="submit" class="btn btn-danger">Remove</button> 
+              </form> 
+            </td> 
+          </tr> 
+        {% endfor %} 
+        <tr> 
+          <td colspan="3"></td> 
+          <td><strong>Total:</strong></td> 
+          <td><strong>${{ order_items(Sum('price')) }}</strong></td> 
+        </tr>
+      </tbody> 
+    </table> 
+    <a href="{% url 'menu' %}" class="btn btn-primary">Continue Shopping</a> 
+    <a href="{% url 'checkout' %}" class="btn btn-success">Checkout</a> 
+  {% else %} 
+    <p>Your cart is empty.</p> 
+    <a href="{% url 'menu' %}" class="btn btn-primary">Go to Menu</a> 
+  {% endif %} 
+{% endblock %} 
